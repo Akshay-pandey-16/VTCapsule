@@ -1,7 +1,7 @@
 <!-- file name - create_capsule.php -->
 <?php
 session_start();
-include 'connect.php'; // Include DB connection file
+include 'connect.php'; 
 
 // Ensure the user is logged in
 if (!isset($_SESSION['email'])) {
@@ -21,12 +21,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $message = trim($_POST['message']);
     $open_date = trim($_POST['open_date']);
 
-    // Validate date format (Optional but recommended)
+    
     if (!strtotime($open_date)) {
         die("Error: Invalid date format.");
     }
 
-    // Fetch sender_id using sender's email
+    
     $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
     $stmt->bind_param("s", $sender_email);
     $stmt->execute();
@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->fetch();
     $stmt->close();
 
-    // Fetch receiver_id using receiver's email
+   
     $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
     $stmt->bind_param("s", $receiver_email);
     $stmt->execute();
@@ -42,12 +42,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->fetch();
     $stmt->close();
 
-    // Ensure the recipient exists
+   
     if (!$receiver_id) {
         die("Error: The recipient email is not registered.");
     }
 
-    // Insert message into the database
+  
     $stmt = $conn->prepare("INSERT INTO messages (sender_id, sender_email, receiver_id, receiver_email, title, message, open_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("issssss", $sender_id, $sender_email, $receiver_id, $receiver_email, $title, $message, $open_date);
 
